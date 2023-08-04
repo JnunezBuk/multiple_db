@@ -1,24 +1,7 @@
-# README
+Para levantar la aplicacion en modo produccion correr el siguiente comando
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Le puedes agregar el flag -d para levantar los contenedores en modo detach
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+docker-compose -f docker-compose.prod.yml up --build
+```
