@@ -1,0 +1,57 @@
+version: '3.8'
+
+networks:
+  pg_network:
+    driver: bridge
+
+services:
+  db_primary:
+    image: bitnami/postgresql:latest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pg_network
+    environment:
+      - POSTGRESQL_PASSWORD=multiple_db_password
+      - POSTGRESQL_USERNAME=multiple_db
+      - POSTGRESQL_DATABASE=multiple_db_production
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=replicator
+      - POSTGRESQL_REPLICATION_PASSWORD=password_replication
+      - POSTGRESQL_PGAUDIT_LOG=write,read
+
+  db_replica:
+    image: bitnami/postgresql:latest
+    networks:
+      - pg_network
+    environment:
+      - POSTGRESQL_PASSWORD=multiple_db_password
+      - POSTGRESQL_USERNAME=multiple_db
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_MASTER_HOST=db_primary
+      - POSTGRESQL_MASTER_PORT=5432
+      - POSTGRESQL_REPLICATION_USER=replicator
+      - POSTGRESQL_REPLICATION_PASSWORD=password_replication
+      - POSTGRESQL_PGAUDIT_LOG=write,read
+    depends_on:
+      - db_primary
+  api:
+    build: .
+    depends_on:
+      db_primary:
+        condition: service_healthy
+    networks:
+      - pg_network
+    ports:
+      - 3000:3000
+    environment:
+      - SECRET_KEY_BASE=7794f5ebe619c228219d57dc0e9fe2710b921cc800f439e9fb106bf2667e72e454d2c273044b8d8c64b31ece4b8c7deaaf6d455e147f417d1ee4f250447bce84
+      - MULTIPLE_DB_REPLICA_HOST=db_replica
+      - MULTIPLE_DB_DATABASE_USERNAME=multiple_db
+      - MULTIPLE_DB_DATABASE_PASSWORD=multiple_db_password
+      - MULTIPLE_DB_DATABASE_HOST=db_primary
+      - RAILS_ENV=production
+    entrypoint: [bin/entry]

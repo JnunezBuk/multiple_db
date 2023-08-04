@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+bin/rails db:environment:set RAILS_ENV=production
+echo "ENVIRONMENT!!!!!!"
+echo $RAILS_ENV
+RAILS_ENV=production bin/rails db:migrate --trace
+RAILS_ENV=production bin/rails server
+
+exec "$@"
