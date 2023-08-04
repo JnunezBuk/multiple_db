@@ -15,8 +15,8 @@ services:
     networks:
       - pg_network
     environment:
-      - POSTGRESQL_PASSWORD=multiple_db_password
-      - POSTGRESQL_USERNAME=multiple_db
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_DATABASE=multiple_db_production
       - POSTGRESQL_REPLICATION_MODE=master
       - POSTGRESQL_REPLICATION_USER=replicator
@@ -28,8 +28,8 @@ services:
     networks:
       - pg_network
     environment:
-      - POSTGRESQL_PASSWORD=multiple_db_password
-      - POSTGRESQL_USERNAME=multiple_db
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_REPLICATION_MODE=slave
       - POSTGRESQL_MASTER_HOST=db_primary
       - POSTGRESQL_MASTER_PORT=5432
@@ -50,8 +50,8 @@ services:
     environment:
       - SECRET_KEY_BASE=7794f5ebe619c228219d57dc0e9fe2710b921cc800f439e9fb106bf2667e72e454d2c273044b8d8c64b31ece4b8c7deaaf6d455e147f417d1ee4f250447bce84
       - MULTIPLE_DB_REPLICA_HOST=db_replica
-      - MULTIPLE_DB_DATABASE_USERNAME=multiple_db
-      - MULTIPLE_DB_DATABASE_PASSWORD=multiple_db_password
+      - MULTIPLE_DB_DATABASE_USERNAME=postgres
+      - MULTIPLE_DB_DATABASE_PASSWORD=postgres
       - MULTIPLE_DB_DATABASE_HOST=db_primary
       - RAILS_ENV=production
     entrypoint: [bin/entry]
